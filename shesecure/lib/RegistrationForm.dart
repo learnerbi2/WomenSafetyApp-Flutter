@@ -1,11 +1,8 @@
 
-//import 'package:csc_picker/model/select_status_model.dart';
 import 'package:csc_picker/csc_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:shesecure/TextInputField.dart';
 import 'package:shesecure/homepage.dart';
-//import 'package:womensafetyapp/backgroundsos.dart';
-//import 'package:womensafetyapp/sosFunction.dart';
 
 const primaryColor = Colors.black;
 
@@ -101,6 +98,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       appBar: AppBar(
         title: const Text(
           "Registration Form",
@@ -115,6 +113,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+
               const Text("User Name"),
               Row(
                 children: [
@@ -128,6 +127,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     ),
                   ),
                   const SizedBox(width: 16),
+
                   Expanded(
                     child: TextInputField(
                       textEditingController: _lastNameController,
@@ -139,6 +139,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 ],
               ),
               const SizedBox(height: 16),
+
               const Text(
                 "Address",
                 style: TextStyle(color: primaryColor),
@@ -150,6 +151,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 textInputType: TextInputType.streetAddress,
               ),
               const SizedBox(height: 16),
+
               const Text(
                 "Contact",
                 style: TextStyle(
@@ -163,6 +165,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 isPass: false,
               ),
               const SizedBox(height: 16),
+
               const Text(
                 "Profession",
                 style: TextStyle(
@@ -213,18 +216,18 @@ class _RegistrationFormState extends State<RegistrationForm> {
               const SizedBox(height: 16),
               Row(
                 children: [
-                  Expanded(
-                      child: CSCPicker(
-                    flagState: CountryFlag.ENABLE,
-                    showStates: true,
-                    showCities: true,
-                    layout: Layout.vertical,
-                    onCountryChanged: (Country) {},
-                    onStateChanged: (state) {},
-                    onCityChanged: (city) {},
-                    stateDropdownLabel: "state",
-                    cityDropdownLabel: "district",
-                  )),
+                  // Expanded(
+                  //     child: CSCPicker(
+                  //   flagState: CountryFlag.ENABLE,
+                  //   showStates: true,
+                  //   showCities: true,
+                  //   layout: Layout.vertical,
+                  //   onCountryChanged: (Country) {},
+                  //   onStateChanged: (state) {},
+                  //   onCityChanged: (city) {},
+                  //   stateDropdownLabel: "state",
+                  //   cityDropdownLabel: "district",
+                  // )),
                   const SizedBox(width: 16),
                 ],
               ),
