@@ -1,0 +1,1 @@
+ C:\\Users\\bamne\\OneDrive\\Desktop\\Sihproject\\map\\map\\.dart_tool\\flutter_build\\e065a3103001796a85664f92eb542adc\\native_assets.yaml: 
