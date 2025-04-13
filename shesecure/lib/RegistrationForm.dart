@@ -1,11 +1,6 @@
-
-//import 'package:csc_picker/model/select_status_model.dart';
-import 'package:csc_picker/csc_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:shesecure/TextInputField.dart';
-import 'package:shesecure/homepage.dart';
-//import 'package:womensafetyapp/backgroundsos.dart';
-//import 'package:womensafetyapp/sosFunction.dart';
+import 'package:shesecure/bottomnavigation/bottompage.dart';
 
 const primaryColor = Colors.black;
 
@@ -16,84 +11,64 @@ class RegistrationForm extends StatefulWidget {
   State<RegistrationForm> createState() => _RegistrationFormState();
 }
 
+//controllers
 class _RegistrationFormState extends State<RegistrationForm> {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _voiceController = TextEditingController();
-  final TextEditingController _countryController = TextEditingController();
-  final TextEditingController _stateController = TextEditingController();
-  final TextEditingController _districtController = TextEditingController();
+  final TextEditingController _emergencyContactController = TextEditingController();
 
-  // final TextEditingController _parentFirstNameController =
-  //     TextEditingController();
-  // final TextEditingController _parentLastNameController =
-  //     TextEditingController();
-  final TextEditingController _emergencyContactController =
-      TextEditingController();
+  //private strings
+  String? _selectedProfession;
+  String? _selectedGender;
 
-  String? _selectedGrade;
-  String? _selectedShirtSize;
-
-  final List<String> _work = ['Student', 'Job', 'Home Maker', 'Others'];
-  final List<String> _gender = ['Male', 'Female', 'Others'];
+ //dropdown fields
+  final List<String> _professions = ['Student', 'Job', 'Home Maker', 'Others'];
+  final List<String> _genders = ['Male', 'Female', 'Others'];
 
   @override
   void dispose() {
     _firstNameController.dispose();
     _lastNameController.dispose();
     _addressController.dispose();
-    _countryController.dispose();
-    _stateController.dispose();
-    _districtController.dispose();
     _emergencyContactController.dispose();
     super.dispose();
   }
 
+ //validation messages
+  void _showSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message, style: const TextStyle(color: Colors.white)), backgroundColor: Colors.red),
+    );
+  }
   bool _validateFields() {
     if (_firstNameController.text.isEmpty || _lastNameController.text.isEmpty) {
-      _showSnackbar("Please enter the participant's full name.");
+      _showSnackbar("Please enter your full name.");
       return false;
     }
     if (_addressController.text.isEmpty) {
       _showSnackbar("Please enter a valid address.");
       return false;
     }
-    if (_selectedGrade == null) {
+    if (_selectedProfession == null) {
       _showSnackbar("Please select a profession.");
       return false;
     }
     if (_voiceController.text.isEmpty) {
-      _showSnackbar("Please give her a Name.");
-      return false;
-    }
-    if (_countryController.text.isEmpty) {
-      _showSnackbar("Please select Country.");
-      return false;
-    }
-    if (_stateController.text.isEmpty) {
-      _showSnackbar("Please select State.");
-      return false;
-    }
-    if (_districtController.text.isEmpty) {
-      _showSnackbar("Please select District.");
+      _showSnackbar("Please enter a name for Voice Recognizer.");
       return false;
     }
     if (_emergencyContactController.text.isEmpty) {
-      _showSnackbar("Please enter a contact.");
+      _showSnackbar("Please enter an emergency contact.");
       return false;
     }
     return true;
   }
 
-  void _showSnackbar(String message) {
-    final snackBar = SnackBar(content: Text(message));
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
+  //submit buttom and Navigation
   void _submitForm() {
     if (_validateFields()) {
-      // Perform the form submission logic here
       _showSnackbar("Form submitted successfully!");
     }
   }
@@ -101,170 +76,140 @@ class _RegistrationFormState extends State<RegistrationForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Registration Form",
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Colors.blue,
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text("User Name"),
-              Row(
-                children: [
-                  //main details
-                  Expanded(
-                    child: TextInputField(
-                      textEditingController: _firstNameController,
-                      hintText: 'First',
-                      textInputType: TextInputType.text,
-                      isPass: false,
-                    ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Image.asset('lib/assets/RegistrationPage.png',width: 350,height: 200,),
+            SizedBox(height:10),
+            const Text(
+                    'Registration Page',
+                    style: TextStyle(
+                      color: Colors.purple,
+                      fontSize: 50,
+                      fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: TextInputField(
-                      textEditingController: _lastNameController,
-                      hintText: 'Last',
-                      textInputType: TextInputType.text,
-                      isPass: false,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                "Address",
-                style: TextStyle(color: primaryColor),
-              ),
-              TextInputField(
-                textEditingController: _addressController,
-                hintText: 'Enter Address',
-                isPass: false,
-                textInputType: TextInputType.streetAddress,
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                "Contact",
-                style: TextStyle(
-                  color: primaryColor,
-                ),
-              ),
-              TextInputField(
-                textEditingController: _emergencyContactController,
-                hintText: 'Enter phone Number',
-                textInputType: TextInputType.phone,
-                isPass: false,
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                "Profession",
-                style: TextStyle(
-                    color: primaryColor, backgroundColor: Colors.white),
-              ),
-              DropdownButtonFormField<String>(
-                value: _selectedGrade,
-                items: _work.map((String work) {
-                  return DropdownMenuItem<String>(
-                    value: work,
-                    child: Text(
-                      work,
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                  );
-                }).toList(),
-                onChanged: (newValue) {
-                  setState(() {
-                    _selectedGrade = newValue;
-                  });
-                },
-                decoration: const InputDecoration(
-                  hintText: 'Enter your profession',
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                "Gender",
-                style: TextStyle(color: primaryColor),
-              ),
-              DropdownButtonFormField<String>(
-                value: _selectedShirtSize,
-                items: _gender.map((String gender) {
-                  return DropdownMenuItem<String>(
-                    value: gender,
-                    child: Text(gender),
-                  );
-                }).toList(),
-                onChanged: (newValue) {
-                  setState(() {
-                    _selectedShirtSize = newValue;
-                  });
-                },
-                decoration: const InputDecoration(
-                  hintText: 'Enter your Gender',
-                ),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                      child: CSCPicker(
-                    flagState: CountryFlag.ENABLE,
-                    showStates: true,
-                    showCities: true,
-                    layout: Layout.vertical,
-                    onCountryChanged: (Country) {},
-                    onStateChanged: (state) {},
-                    onCityChanged: (city) {},
-                    stateDropdownLabel: "state",
-                    cityDropdownLabel: "district",
-                  )),
-                  const SizedBox(width: 16),
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              const Text(
-                "Voice Recognizer",
-                style: TextStyle(color: primaryColor),
-              ),
-              TextInputField(
-                textEditingController: _voiceController,
-                hintText: 'Give a Nice Name to me',
-                textInputType: TextInputType.text,
-                isPass: false,
-              ),
-              const SizedBox(height: 32),
-              ElevatedButton(
-                style: const ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll(Colors.blue),
-                ),
-                onPressed: () {
-                  _submitForm();
+                  const SizedBox(height: 30),
+            
+            //form fields
+            Form(
+            child: SingleChildScrollView(   
+                 
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                //First Name Field 
+                                child:TextFormField(
+                                        controller:_firstNameController ,
+                                        decoration: InputDecoration(
+                                        labelText: 'First Name',
+                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                                        ),
+                                        ),
+                                ),
+                                const SizedBox(width: 10),
 
-                  // Navigator.push(context,
-                  //   MaterialPageRoute(builder: (context) => SOSPage()));
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const MainApp()));
-                },
-                child: const Text(
-                  'Submit',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+                                //Last Name Field
+                                Expanded(
+                                  child: TextFormField(
+                                        controller: _lastNameController,
+                                        decoration:InputDecoration(
+                                        labelText: 'Last Name',
+                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                                        )
+                                      ) ),],),
+                            const SizedBox(height: 20),
+
+                              //Address
+                              TextFormField(
+                                  controller: _addressController,
+                                  decoration: InputDecoration(
+                                  labelText: 'Address',
+                                  border:OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
+                          
+                           //Phone Number
+                           TextFormField(
+                            controller: _emergencyContactController,
+                            decoration: InputDecoration(
+                            labelText: 'Phone Number',
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                            prefixIcon: Icon(Icons.person_outline_rounded)
+                             ),
+                            ),
+                            const SizedBox(height: 20),
+      
+                            //Profession Selection
+                            const Text("Profession", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Colors.white)),
+                            DropdownButtonFormField<String>(
+                              value: _selectedProfession,
+                              items: _professions.map((String profession) {
+                                return DropdownMenuItem<String>(
+                                  value: profession,
+                                  child: Text(profession),
+                                );
+                              }).toList(),
+                              onChanged: (newValue) {
+                                setState(() {
+                                  _selectedProfession = newValue;
+                                });
+                              },
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                                hintText: 'Select your profession',
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            
+                            //Gender Selection
+                            DropdownButtonFormField<String>(
+                              value: _selectedGender,
+                              items: _genders.map((String gender) {
+                                return DropdownMenuItem<String>(
+                                  value: gender,
+                                  child: Text(gender),
+                                );
+                              }).toList(),
+                              onChanged: (newValue) {
+                                setState(() {
+                                  _selectedGender = newValue;
+                                });
+                              },
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                                hintText: 'Select your gender',
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+
+                            //Voive Recognizer Name  
+                            TextFormField(
+                              controller: _voiceController,
+                              decoration: InputDecoration(
+                              labelText: 'Voice Recognizer',
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                              prefixIcon: Icon(Icons.mic)
+                            ),
+                            ),
+                            const SizedBox(height: 32),
+                            
+                            //submit Button
+                            ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.deepPurple,
+                                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                    ),
+                                    onPressed:(){
+                                      Navigator.push(context, MaterialPageRoute(builder:(context)=>MyHomePage()));
+                                    },
+                                    child: const Text('Submit', style: TextStyle(color: Colors.white, fontSize: 16)),
+                                  ),
+
+
+],),), ),]),),);}}

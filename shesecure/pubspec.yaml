@@ -30,17 +30,24 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  csc_picker: ^0.2.7
   speech_to_text: ^7.0.0
   permission_handler: ^11.3.1
-  google_maps_flutter: ^2.9.0
+  flutter_map: ^7.0.2
   flutter_background_service: ^5.0.10
+  google_maps_flutter: ^2.10.0
+  http: ^1.2.2
+  latlong2: ^0.9.1
+  fluttertoast: ^8.2.8
+  url_launcher: ^6.3.1
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   carousel_slider: ^5.0.0
   webview_flutter: ^4.10.0
   youtube_player_flutter: ^9.1.1
+  contacts_service: ^0.6.3
+  sqflite: ^2.4.2
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -69,6 +76,13 @@ flutter:
     - lib/assets/facebook.png
     - lib/assets/google.png
     - lib/assets/logo.png
+    - lib/assets/location.png
+    - lib/assets/gender.png
+    - lib/assets/martial.png
+    - lib/assets/sos.png
+    - lib/assets/contacts.png
+    - lib/assets/womenSafety.png
+    - lib/assets/RegistrationPage.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

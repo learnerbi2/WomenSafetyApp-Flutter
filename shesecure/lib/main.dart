@@ -1,23 +1,19 @@
-import 'package:flutter/material.dart';
-import 'package:shesecure/SplashScreen.dart';
+
+import "package:flutter/material.dart";
+import "package:shesecure/SplashScreen.dart";
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    theme: ThemeData(brightness: Brightness.light,primarySwatch: Colors.deepPurple);
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const SplashScreen(),
+      debugShowCheckedModeBanner: false,
+      title: 'Profile',
+      home: SplashScreen(),
     );
   }
 }

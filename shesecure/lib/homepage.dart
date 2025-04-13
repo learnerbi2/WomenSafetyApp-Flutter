@@ -1,13 +1,16 @@
-import 'dart:math';
 
+import 'dart:io';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shesecure/AboutUs.dart';
+import 'package:shesecure/ContactScreen.dart';
+import 'package:shesecure/Feedback.dart';
+import 'package:shesecure/Important%20modules/EmergencyContacts/Contacts.dart';
+import 'package:shesecure/Important%20modules/EmergencyContacts/EmergencyContacts.dart';
+import 'package:shesecure/bottomnavigation/profile.dart';
 import 'package:shesecure/qoting/Motivationaltext.dart';
-import 'package:shesecure/video%20content/crousalpage.dart';
 import 'package:shesecure/video%20content/slider.dart';
-import 'package:shesecure/video%20content/videocrousal.dart';
-//import 'package:womensafetyapp/sosFunction.dart';
-
 void main() {
   runApp(const MainApp());
 }
@@ -15,9 +18,13 @@ void main() {
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
+  static Future<void> openMap(String location) async {
+    
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(home: MainUI());
+    return const MaterialApp(debugShowCheckedModeBanner: false, home: MainUI());
   }
 }
 
@@ -29,9 +36,25 @@ class MainUI extends StatefulWidget {
 }
 
 class _MainUIState extends State<MainUI> {
+
+  int _currentIndex = 0;
+
+  final List<Widget> _pages = [
+    MainUI(),
+    AboutUsScreen(),
+    FeedbackScreen(),
+    ContactScreen(),
+    ProfilePage(),
+  ];
+
+  void _onTabTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
 //quotes
   int qIndex = 0;
-
   getRandomQuote() {
     Random random = Random();
     setState(() {
@@ -42,11 +65,15 @@ class _MainUIState extends State<MainUI> {
 //permission
   @override
   void initState() {
+     getRandomQuote();
+     requestPermissions(); // Request permissions when the app starts
     super.initState();
-        getRandomQuote();
+   
     requestPermissions(); // Request permissions when the app starts
+
   }
 
+  //permissions 
   Future<void> requestPermissions() async {
     // Request microphone permission
     var microphoneStatus = await Permission.microphone.request();
@@ -70,9 +97,10 @@ class _MainUIState extends State<MainUI> {
   List cateNames = [
     "SOS",
     "Gender Detection",
-    "Location",
     "Hotspots",
+    "Emergency Contacts",
   ];
+
   List<Color> cateColors = [
     const Color.fromARGB(255, 9, 101, 240),
     const Color.fromARGB(255, 16, 25, 202),
@@ -80,52 +108,65 @@ class _MainUIState extends State<MainUI> {
     const Color.fromARGB(255, 75, 14, 241),
   ];
 
-  List<Icon> catIcons = [
-    const Icon(
-      Icons.category,
-      color: Colors.white,
-      size: 30,
-    ),
-    const Icon(
-      Icons.person,
-      color: Colors.white,
-      size: 30,
-    ),
-    const Icon(
-      Icons.location_on,
-      color: Colors.white,
-      size: 30,
-    ),
-    const Icon(
-      Icons.dangerous,
-      color: Colors.white,
-      size: 30,
-    ),
+  List<Image> catImages = [
+    Image.asset('lib/assets/sos.png'),
+    Image.asset('lib/assets/gender.png'),
+    Image.asset('lib/assets/location.png'),
+    Image.asset('lib/assets/contacts.png'),
   ];
 
-  void _categoryTapped(int index) {
-    // Handle the category tap here
+//function call
+ Future<void> _categoryTapped(int index, String categoryName) async {
+    print("Tapped on $categoryName at index $index");
+    // Here, you can add navigation or any other logic based on index or categoryName
     if (index == 0) {
-      // Trigger SOS action
+      // For example, navigate to a specific screen
+      print("Navigating to SOS screen...");
+
     } else if (index == 1) {
       // Navigate to gender detection screen
-      Navigator.pushNamed(context, '/genderDetection');
+      print("Navigating to Gender Detection screen...");
+
     } else if (index == 2) {
-      // Navigate to location screen
-      Navigator.pushNamed(context, '/location');
-    } else if (index == 3) {
       // Navigate to hotspots screen
-      Navigator.pushNamed(context, '/hotspots');
+      print("Navigating to Hotspots screen...");
+          String googleUrl = 'https://www.google.com/maps/search/police+station+near+me/@23.1666823,77.2573852,12z/data=!3m1!4b1?entry=ttu&g_ep=EgoyMDI0MTExOS4yIKXMDSoASAFQAw%3D%3D';
+    
+    // if (Platform.isAndroid) {
+    //   if (await canLaunchUrl(Uri.parse(googleUrl))) {
+    //     await launchUrl(Uri.parse(googleUrl));
+    //   } else {
+    //     throw 'Could not launch $googleUrl';
+    //   }
+    // }
+
+    } else if (index == 3) {
+      // Navigate to emergency contacts screen
+      print("Navigating to Emergency Contacts screen...");
+      Navigator.push(context,MaterialPageRoute(builder: (context)=>Emergencycontacts()));
+    
     }
+
   }
+
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(
+      appBar: AppBar(title:Text("She Secure",style: TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+        ),
+        ),backgroundColor: Colors.blue,
+        ),
+          body: 
+          Stack(
       children: [videomethod(context)],
-    ));
+        ),
+      );
   }
+
   Container videomethod(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
@@ -133,20 +174,17 @@ class _MainUIState extends State<MainUI> {
         children: [
           //Appbar and search function
           header(),
-          const SizedBox( height: 10),
-          //slider for videos
-         // CustomCarouel(),
-          // SizedBox(height:10),
+          const SizedBox(height: 10),
           slider(),
-          SizedBox(height:10),
+          SizedBox(height: 10),
           //tips and tools
           Padding(
-          padding: EdgeInsets.only(left:100),
-          child: const Text(
+            padding: EdgeInsets.only(left: 100),
+            child: const Text(
               "Tips and Tools",
-          style: TextStyle(
-          fontSize: 22,
-          fontWeight: FontWeight.w600,
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
@@ -154,11 +192,18 @@ class _MainUIState extends State<MainUI> {
             height: 10,
           ),
           Container(
-          padding: const EdgeInsets.only(left: 15, bottom: 20, right: 15),
-          decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(70),
+              padding: const EdgeInsets.only(left: 15, bottom: 20, right: 15),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xFF0288D1),
+                    Color(0xFF01579B),
+                    Color(0xFF4FC3F7),
+                  ],
+                ),
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(70),
                 ),
               ),
               child: Padding(
@@ -178,16 +223,23 @@ class _MainUIState extends State<MainUI> {
                             itemBuilder: (context, index) {
                               return Column(
                                 children: [
-                                  Container(
-                                      height: 80,
-                                      width: 80,
-                                      decoration: BoxDecoration(
-                                        color: cateColors[index],
-                                        shape: BoxShape.circle,
+                                GestureDetector(
+                                    onTap: () => _categoryTapped(index, cateNames[index]),
+                                    child: Card(
+                                      elevation: 3,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
                                       ),
-                                      child: Center(
-                                        child: catIcons[index],
-                                      )),
+                                      child: Container(
+                                          height: 60,
+                                          width: 60,
+                                          // decoration: BoxDecoration(
+                                          // ),
+                                          child: Center(
+                                            child: catImages[index],
+                                          )),
+                                    ),
+                                  ),
                                   const SizedBox(
                                     height: 10,
                                   ),
@@ -195,7 +247,7 @@ class _MainUIState extends State<MainUI> {
                                       style: TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.w500,
-                                        color: Colors.black.withOpacity(0.8),
+                                        color: Colors.white,
                                       ))
                                 ],
                               );
@@ -208,11 +260,34 @@ class _MainUIState extends State<MainUI> {
     );
   }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   Container header() {
     return Container(
         padding:
             const EdgeInsets.only(top: 15, left: 15, right: 15, bottom: 10),
         decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFF4FC3F7),
+                Color(0xFF0288D1),
+                Color(0xFF01579B),
+              ],
+            ),
             color: Colors.blue,
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(20),
@@ -225,7 +300,7 @@ class _MainUIState extends State<MainUI> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Icon(
-                  Icons.arrow_back,
+                  Icons.menu,
                   size: 30,
                   color: Colors.white,
                 ),
@@ -238,30 +313,31 @@ class _MainUIState extends State<MainUI> {
             ),
             const SizedBox(
               height: 10,
-            ),  
+            ),
             Padding(
                 padding: const EdgeInsets.only(left: 3, bottom: 15),
                 child: CustomAppBar(
                   onTap: getRandomQuote(),
                   quoteIndex: qIndex,
                 )),
-            Container(
-              height: 55,
-              margin: const EdgeInsets.only(top: 3, bottom: 15),
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(10)),
-              child: TextFormField(
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: "Search Here...",
-                  hintStyle: TextStyle(color: Colors.black.withOpacity(0.8)),
-                  contentPadding: const EdgeInsets.only(top: 13),
-                  prefixIcon: const Icon(Icons.search),
-                ),
-              ),
-            )
+            // Container(
+            //   height: 55,
+            //   margin: const EdgeInsets.only(top: 3, bottom: 15),
+            //   width: MediaQuery.of(context).size.width,
+            //   decoration: BoxDecoration(
+            //       color: Colors.white, borderRadius: BorderRadius.circular(10)),
+            //   child: TextFormField(
+            //     decoration: InputDecoration(
+            //       border: InputBorder.none,
+            //       hintText: "Search Here...",
+            //       hintStyle: TextStyle(color: Colors.black),
+            //       contentPadding: const EdgeInsets.only(top: 13),
+            //       prefixIcon: const Icon(Icons.search),
+            //     ),
+            //   ),
+            // )
           ],
         ));
   }
 }
+
