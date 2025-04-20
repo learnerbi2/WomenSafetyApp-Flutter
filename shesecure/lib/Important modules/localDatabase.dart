@@ -19,8 +19,19 @@ class TContact{
   } 
 
   //setters
-  set number(String newNumber) => this.number = newNumber;
+  set number(String newNumber) => this._number = newNumber;
   set name(String newName)=> this._name=newName;
+
+  Map<String, dynamic> toMap() {
+  var map = <String, dynamic>{
+    'name': _name,
+    'number': _number,
+  };
+  if (_id != null) {
+    map['id'] = _id;
+  }
+  return map;
+}
 }
 
 class DatabaseHelper{
@@ -40,10 +51,16 @@ class DatabaseHelper{
   return _databaseHelper!;
  }
 
+static Database? _database;
+
+Future<Database> get database async {
+  _database ??= await initializeDatabase();
+  return _database!;
+}
 
 Future<Database> initializeDatabase() async{
   String directoryPath = await getDatabasesPath();
-  String dbLocation = directoryPath.'contact.db';
+ String dbLocation = '$directoryPath/contact.db';
 
   var contactDatabase = await openDatabase(dbLocation, version:1,onCreate:_createDbTable);
   return contactDatabase;
@@ -57,7 +74,7 @@ void _createDbTable(Database db, int newVersion) async{
 //Fetch operation get contact object from db
 Future<List<Map<String,dynamic>>>getContactMapList()async{
   Database db = await this.database;
-  List<List<Map<String,dynamic>>> result = await db.rawQuery('SELECT * From $contactTable order by $colId ASC');
+  List<Map<String, dynamic>> result = await db.rawQuery('SELECT * FROM $contactTable ORDER BY $colId ASC');
   return result;
 }
 
@@ -66,11 +83,16 @@ Future<int> insertContact(TContact contact) async {
   Database db = await this.database;
   var result = await db.insert(contactTable,contact.toMap());
   return result;
-
+}
 //update a contact
-// Future<int> update contact(TContact contact)async{
-//   Database db = await this.database;
-//   var result = await db.update(contactTable,contact.toMap(),where:$colId=?,whereArgs:)
-// }
+Future<int> updateContact(TContact contact) async {
+  var db = await this.database;
+  var result = await db.update(
+    contactTable,
+    contact.toMap(),
+    where: '$colId = ?',
+    whereArgs: [contact.id],
+  );
+  return result;
 }
 }

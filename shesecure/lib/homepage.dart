@@ -9,6 +9,7 @@ import 'package:shesecure/Feedback.dart';
 import 'package:shesecure/Important%20modules/EmergencyContacts/Contacts.dart';
 import 'package:shesecure/Important%20modules/EmergencyContacts/EmergencyContacts.dart';
 import 'package:shesecure/bottomnavigation/profile.dart';
+import 'package:shesecure/hotspot/mapOpenRootService.dart';
 import 'package:shesecure/qoting/Motivationaltext.dart';
 import 'package:shesecure/video%20content/slider.dart';
 void main() {
@@ -38,6 +39,11 @@ class MainUI extends StatefulWidget {
 class _MainUIState extends State<MainUI> {
 
   int _currentIndex = 0;
+  //map locations
+  final List<Map<String, double>> yourLocationList = [
+  {"lat": 23.1765, "lng": 77.3156}, // Example: police station
+  {"lat": 23.1791, "lng": 77.4398}, // Example: hospital
+];
 
   final List<Widget> _pages = [
     MainUI(),
@@ -129,16 +135,7 @@ class _MainUIState extends State<MainUI> {
 
     } else if (index == 2) {
       // Navigate to hotspots screen
-      print("Navigating to Hotspots screen...");
-          String googleUrl = 'https://www.google.com/maps/search/police+station+near+me/@23.1666823,77.2573852,12z/data=!3m1!4b1?entry=ttu&g_ep=EgoyMDI0MTExOS4yIKXMDSoASAFQAw%3D%3D';
-    
-    // if (Platform.isAndroid) {
-    //   if (await canLaunchUrl(Uri.parse(googleUrl))) {
-    //     await launchUrl(Uri.parse(googleUrl));
-    //   } else {
-    //     throw 'Could not launch $googleUrl';
-    //   }
-    // }
+      Navigator.push(context,MaterialPageRoute(builder: (context)=> OpenRootMap(points:yourLocationList )));
 
     } else if (index == 3) {
       // Navigate to emergency contacts screen
@@ -259,8 +256,6 @@ class _MainUIState extends State<MainUI> {
       ),
     );
   }
-
-
 
 
 
